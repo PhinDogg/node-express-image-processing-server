@@ -27,9 +27,15 @@ const fileFilter = (request, file, callback) => {
 
 const upload = multer({ fileFilter, storage });
 
-router.post('/upload', upload.single('photo'), (request, response) => {
+router.post('/upload', upload.single('photo'), async (request, response) => {
   // eslint-disable-next-line max-len
   if (request.fileValidationError) return response.status(400).json({ error: request.fileValidationError });
+
+  try {
+    await imageProcessor(request.file.filename);
+  } catch (e) {
+
+  }
 
   return response.status(201).json({ success: true });
 });
