@@ -25,13 +25,13 @@ const fileFilter = (request, file, callback) => {
   }
 };
 
-const upload = multer({ fileFilter, storage, });
+const upload = multer({ fileFilter, storage });
 
 router.post('/upload', upload.single('photo'), (request, response) => {
   // eslint-disable-next-line max-len
   if (request.fileValidationError) return response.status(400).json({ error: request.fileValidationError });
 
-  return response.status(201).json({success: true});
+  return response.status(201).json({ success: true });
 });
 
 router.get('/photo-viewer', (req, res) => {
