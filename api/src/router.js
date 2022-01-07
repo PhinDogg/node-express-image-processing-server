@@ -1,33 +1,37 @@
 const { Router } = require('express');
-const express = require('express');
 const multer = require('multer');
+const path = require('path');
+const imageProcessor = require('./imageProcessor');
+
 const router = Router();
 
-// const storage = multer.diskStorage({ destination: 'api/uploads/', filename: filename });
-// const upload = multer({ fileFilter: fileFilter(), storage: storage });
+const filename = (request, file, callback) => {
+  callback(null, file.originalname);
+};
 
+const storage = multer.diskStorage({
+  destination: 'api/uploads/',
+  filename,
+});
 
+const fileFilter = (request, file, callback) => {
+  if (file.mimetype !== 'image/png') {
+    request.fileValidationError = 'Wrong file type';
+    callback(null, false, new Error('Wrong file type'));
+  } else {
+    callback(null, true);
+  }
+};
 
-// function filename(req, file, callback) {
-//     callback(null, file.originalname);
-// }
+const upload = multer({
+  fileFilter,
+  storage,
+});
 
-// function fileFilter(req, file, callback) {
-//     if(file.mimetype !== 'image/png') {
-//         req.fileValidationError = 'Wrong file type';
-//         callback(null, false, Error = { message: 'Wrong file type' });
-//     } else {
-//         callback(null, true);
-//     }
-// }
+router.post('/upload', upload.single('photo'), (request, response) => {
+  if (request.fileValidationError) return response.status(400).json({error: request.fileValidationError});
 
-// router.post('/uploads', upload.single('photo'), (req, res) => {
-//     if(req.fileValidationError) {
-//         response.status(400).json({ error: req.fileValidationError });
-//     } else {
-//         req.status(201).json({ success: true });
-//     }
-// });
-
+  return response.status(201).json({success: true});
+});
 
 module.exports = router;
