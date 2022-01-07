@@ -3,6 +3,8 @@ const multer = require('multer');
 const path = require('path');
 const imageProcessor = require('./imageProcessor');
 
+const photoPath = path.resolve(__dirname, '../../client/photo-viewer.html');
+
 const router = Router();
 
 const filename = (request, file, callback) => {
@@ -23,15 +25,17 @@ const fileFilter = (request, file, callback) => {
   }
 };
 
-const upload = multer({
-  fileFilter,
-  storage,
-});
+const upload = multer({ fileFilter, storage, });
 
 router.post('/upload', upload.single('photo'), (request, response) => {
-  if (request.fileValidationError) return response.status(400).json({error: request.fileValidationError});
+  // eslint-disable-next-line max-len
+  if (request.fileValidationError) return response.status(400).json({ error: request.fileValidationError });
 
   return response.status(201).json({success: true});
+});
+
+router.get('/photo-viewer', (req, res) => {
+  res.sendFile(photoPath);
 });
 
 module.exports = router;

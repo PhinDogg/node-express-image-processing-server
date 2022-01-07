@@ -1,13 +1,16 @@
 module.exports = {
-    "parserOptions": {
-      "ecmaVersion": 2017
-    },
-    "extends": "google",
-    "env": {
-      "node": true,
-      "es6": true
-    },
-    "rules": {
-      "allowArrowFunctions": true
-    }
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+  },
+  extends: [
+    'airbnb-base',
+  ],
+  parserOptions: {
+    ecmaVersion: 13,
+    sourceType: 'module',
+  },
+  rules: {
+  },
 };
